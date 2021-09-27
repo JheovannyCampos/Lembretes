@@ -6,15 +6,19 @@ import {
     TextInput,
     FlatList,
     StatusBar,
+    Platform,
 } from "react-native"
 
 import { Button } from "../components/button";
 import { ReminderCard } from "../components/ReminderCard";
-// import  DatePicker  from "react-native-datepicker";
+import DateTimePicker from '@react-native-community/datetimepicker';
+
+
 
 interface ReminderData{
     id: string;
     name: string;
+
 }
 
 export function Home(){ 
@@ -22,6 +26,30 @@ export function Home(){
     const [newReminder, setNewReminder] = useState("");
     const [myReminder, setMyReminder] = useState<ReminderData[]>([]);
     const [greeting, setGreeting] = useState("");
+
+    const [date, setDate] = useState(new Date(1598051730000));
+  const [mode, setMode] = useState('date');
+  const [show, setShow] = useState(false);
+
+  const onChange = (event, selectedDate) => {
+      console.log(event, selectedDate);
+    const currentDate = selectedDate || date;
+    setShow(Platform.OS === 'ios');
+    setDate(currentDate);
+  };
+
+  const showMode = (currentMode) => {
+    setShow(true);
+    setMode(currentMode);
+  };
+
+  const showDatepicker = () => {
+    showMode('date');
+  };
+
+  const showTimepicker = () => {
+    showMode('time');
+  };
 
     useEffect(() => {
         const currentHour = new Date().getHours();
@@ -38,8 +66,13 @@ export function Home(){
     function handleAddNewReminder(){
         const data = {
             id: String(new Date().getTime()),
-            name: newReminder
+            name: newReminder,
+            day: date.getDate(),
+            month: date.getMonth() + 1,
+            year: date.getFullYear(),
+            time: `${date.getHours()}:${date.getMinutes()}`,
         }
+        console.log(data);
         setMyReminder((oldState) =>[...oldState, data]);
         setNewReminder('')
     }
@@ -62,12 +95,19 @@ export function Home(){
                 onChangeText={setNewReminder}
                 value={newReminder}
             />
-            {/* <DatePicker
-                format="DD-MM-YYYY"
-                date={date}
-                onDateChange={date => setDate(date)}
-            /> */}
+            {show && (
+                <DateTimePicker
+                    testID="dateTimePicker"
+                    value={date}
+                    mode={mode}
+                    is24Hour={true}
+                    display="default"
+                    onChange={onChange}
+                />
+                )}
             <Button title="Adicionar" onPress={() => handleAddNewReminder()}/>
+            <Button onPress={showDatepicker} title="Show date picker!" />
+            <Button onPress={showTimepicker} title="Show time picker!" />
             <Text style={[style.title, {marginVertical: 50}]}>Meus Lembretes</Text>
             <FlatList 
                 data={myReminder}

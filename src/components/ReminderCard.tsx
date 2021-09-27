@@ -3,15 +3,19 @@ import { TouchableOpacity, TouchableOpacityProps, Text, StyleSheet } from 'react
 
 interface ReminderCardProps extends TouchableOpacityProps {
     reminder: string;
+    day: number;
+    month: number;
+    year: number;
+    time: string;
 }
 
-export function ReminderCard({ reminder, ...rest } : ReminderCardProps){
+export function ReminderCard({day, month, year, reminder, ...rest } : ReminderCardProps){
     return(
         <TouchableOpacity
             style={style.buttonReminder}
             {...rest}
         >
-            <Text style={style.textReminder}>{reminder}</Text>
+            <Text style={style.textReminder}>`${reminder} <br></br> ${day} ${month} ${year}`</Text>
         </TouchableOpacity>
     );
 }

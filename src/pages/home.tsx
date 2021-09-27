@@ -14,42 +14,44 @@ import { ReminderCard } from "../components/ReminderCard";
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 
-
 interface ReminderData{
     id: string;
     name: string;
-
+    day: number;
+    month: number;
+    year: number;
+    time: string;
 }
 
 export function Home(){ 
-    //const[date, setDate] = useState("");
-    const [newReminder, setNewReminder] = useState("");
-    const [myReminder, setMyReminder] = useState<ReminderData[]>([]);
-    const [greeting, setGreeting] = useState("");
+  //const[date, setDate] = useState("");
+  const [newReminder, setNewReminder] = useState("");
+  const [myReminder, setMyReminder] = useState<ReminderData[]>([]);
+  const [greeting, setGreeting] = useState("");
 
-    const [date, setDate] = useState(new Date(1598051730000));
+  const [date, setDate] = useState(new Date(1598051730000));
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
 
   const onChange = (event, selectedDate) => {
-      console.log(event, selectedDate);
+    console.log(event, selectedDate);
     const currentDate = selectedDate || date;
     setShow(Platform.OS === 'ios');
     setDate(currentDate);
-  };
+    };
 
-  const showMode = (currentMode) => {
-    setShow(true);
-    setMode(currentMode);
-  };
+    const showMode = (currentMode) => {
+      setShow(true);
+      setMode(currentMode);
+    };
 
-  const showDatepicker = () => {
-    showMode('date');
-  };
+    const showDatepicker = () => {
+      showMode('date');
+    };
 
-  const showTimepicker = () => {
-    showMode('time');
-  };
+    const showTimepicker = () => {
+      showMode('time');
+    };
 
     useEffect(() => {
         const currentHour = new Date().getHours();
@@ -72,7 +74,6 @@ export function Home(){
             year: date.getFullYear(),
             time: `${date.getHours()}:${date.getMinutes()}`,
         }
-        console.log(data);
         setMyReminder((oldState) =>[...oldState, data]);
         setNewReminder('')
     }
@@ -105,14 +106,19 @@ export function Home(){
                     onChange={onChange}
                 />
                 )}
+            <Button onPress={showDatepicker} style={style.buttonTime} title="Data" />
+            <Button onPress={showTimepicker} style={style.buttonTime} title="Horário" />
             <Button title="Adicionar" onPress={() => handleAddNewReminder()}/>
-            <Button onPress={showDatepicker} title="Show date picker!" />
-            <Button onPress={showTimepicker} title="Show time picker!" />
             <Text style={[style.title, {marginVertical: 50}]}>Meus Lembretes</Text>
             <FlatList 
                 data={myReminder}
                 keyExtractor={(item) => item.id}
-                renderItem={({ item }) => (<ReminderCard reminder={item.name} onPress={() => handleRemoveReminder(item.id)}/>)}
+                renderItem={({ item }) => (<ReminderCard reminder={item.name} 
+                  day={item.day} 
+                  month={item.month}
+                  year={item.year}
+                  time={item.time}
+                  onPress={() => handleRemoveReminder(item.id)}/>)}
             />
         </View>
     )
@@ -143,4 +149,12 @@ const style = StyleSheet.create({
       greetings: {
         color: "#fff",
       },
+      buttonTime: {
+        backgroundColor: "#274aaa",
+        padding: 15,
+        borderRadius: 7,
+        alignItems: "center",
+        marginTop: 20,
+        marginVertical: 7,
+      }
 })

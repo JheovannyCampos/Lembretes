@@ -9,13 +9,15 @@ interface ReminderCardProps extends TouchableOpacityProps {
     time: string;
 }
 
-export function ReminderCard({day, month, year, reminder, ...rest } : ReminderCardProps){
+export function ReminderCard({day, month, year, time, reminder, ...rest } : ReminderCardProps){
     return(
         <TouchableOpacity
             style={style.buttonReminder}
             {...rest}
         >
-            <Text style={style.textReminder}>`${reminder} <br></br> ${day} ${month} ${year}`</Text>
+            <Text style={style.textReminder}>{reminder}</Text>
+            <Text>{day}/{month}/{year}</Text>
+            <Text>{time}</Text>
         </TouchableOpacity>
     );
 }
